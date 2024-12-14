@@ -28,7 +28,7 @@ export const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const timerId = window.setTimeout(() => setErrorMessage(''), 4000);
+    const timerId = window.setTimeout(() => setErrorMessage(''), 3000);
 
     return () => clearTimeout(timerId);
   }, [errorMessage]);
