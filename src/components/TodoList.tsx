@@ -15,7 +15,7 @@ type Props = {
   todosForDelete: Todo[];
 };
 
-export const TodoList: React.FC<Props> = ({
+const TodoList: React.FC<Props> = ({
   filteredTodos,
   changeComplete,
   setTodos,
@@ -43,3 +43,5 @@ export const TodoList: React.FC<Props> = ({
     </section>
   );
 };
+
+export default React.memo(TodoList);

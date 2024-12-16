@@ -15,3 +15,7 @@ export const preparedTodos = (todos: Todo[], field: Field) => {
 };
 
 export const buttons = [Field.ALL, Field.ACTIVE, Field.COMPLETED];
+
+export const filterByTodos = (todos: Todo[]) => {
+  return todos.filter(todo => !todo.completed);
+};

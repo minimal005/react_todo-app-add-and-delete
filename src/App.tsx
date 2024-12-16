@@ -2,17 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import * as todosService from './api/todos';
 
 import { ErrorMessages } from './components/ErrorsMessage';
-import { TodoList } from './components/TodoList';
+import TodoList from './components/TodoList';
 import { Footer } from './components/Footer';
-import { Header } from './components/Header';
+import Header from './components/Header';
 
 import { Todo } from './types/Todo';
 import { Field } from './types/Field';
-import { preparedTodos } from './service/service';
+import { filterByTodos, preparedTodos } from './service/service';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [todosCounter, setTodosCounter] = useState<number>(0);
   const [field, setField] = useState<Field>(Field.ALL);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
@@ -27,28 +26,20 @@ export const App: React.FC = () => {
       .catch(() => setErrorMessage('Unable to load todos'));
   }, []);
 
+  const todosCounter = filterByTodos(todos);
+
   useEffect(() => {
     const timerId = window.setTimeout(() => setErrorMessage(''), 3000);
 
     return () => clearTimeout(timerId);
   }, [errorMessage]);
 
-  useEffect(() => {
-    const todosActive = todos.filter(todo => !todo.completed);
-
-    setTodosCounter(todosActive.length);
-  }, [todos]);
-
   const filteredTodos = preparedTodos(todos, field);
 
   const changeComplete = useCallback(
     (todoChanged?: Todo) => {
       const changedTodos = todos.map(todo => {
-        if (!todoChanged) {
-          return { ...todo, completed: !todo.completed };
-        }
-
-        if (todo.id !== todoChanged.id) {
+        if (todo.id !== todoChanged?.id) {
           return todo;
         } else {
           return { ...todo, completed: !todo.completed };
@@ -82,14 +73,14 @@ export const App: React.FC = () => {
         <Header
           todos={todos}
           setTodos={setTodos}
-          todosCounter={todosCounter}
+          todosCounter={todosCounter.length}
           changeComplete={changeComplete}
           setErrorMessage={setErrorMessage}
           addTempTodo={addTempTodo}
           isDeleted={isDeleted}
         />
 
-        {todos && (
+        {!!todos.length && (
           <TodoList
             filteredTodos={filteredTodos}
             changeComplete={changeComplete}
@@ -105,8 +96,8 @@ export const App: React.FC = () => {
           <Footer
             field={field}
             setField={setField}
-            todosCounter={todosCounter}
-            isCompleted={todosCounter === todos.length}
+            todosCounter={todosCounter.length}
+            isCompleted={todosCounter.length === todos.length}
             deleteCompletedTodos={deleteCompletedTodos}
           />
         )}

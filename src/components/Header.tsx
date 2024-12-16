@@ -14,7 +14,7 @@ type Props = {
   isDeleted: boolean;
 };
 
-export const Header: React.FC<Props> = ({
+const Header: React.FC<Props> = ({
   todos,
   setTodos,
   todosCounter,
@@ -25,7 +25,7 @@ export const Header: React.FC<Props> = ({
 }) => {
   return (
     <header className="todoapp__header">
-      {todos && (
+      {!!todos.length && (
         <button
           onClick={() => changeComplete}
           type="button"
@@ -45,3 +45,5 @@ export const Header: React.FC<Props> = ({
     </header>
   );
 };
+
+export default React.memo(Header);

@@ -74,7 +74,6 @@ export const Form: React.FC<Props> = ({
       setErrorMessage('Unable to add a todo');
       setIsError(true);
       setQuery(query);
-      throw error;
     } finally {
       setIsFocused(false);
       addTempTodo(null);

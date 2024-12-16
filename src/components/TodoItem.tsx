@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import * as todosService from '../api/todos';
 
 import { Todo } from '../types/Todo';
@@ -35,29 +29,26 @@ export const TodoItem: React.FC<Props> = ({
     setIsEdited(true);
   }
 
-  const handleDeleteTodo = useCallback(
-    async (todoItem: Todo) => {
-      setIsLoading(true);
-      try {
-        await todosService.deleteTodo(todoItem.id);
-        setTodos(todosPrev =>
-          todosPrev.filter(todoCurrent => todoCurrent.id !== todoItem.id),
-        );
-        setIsDeleted(true);
-      } catch (error) {
-        setErrorMessage('Unable to delete a todo');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [setErrorMessage, setIsDeleted, setTodos],
-  );
+  const handleDeleteTodo = async (todoItem: Todo) => {
+    setIsLoading(true);
+    try {
+      await todosService.deleteTodo(todoItem.id);
+      setTodos(todosPrev =>
+        todosPrev.filter(todoCurrent => todoCurrent.id !== todoItem.id),
+      );
+      setIsDeleted(true);
+    } catch (error) {
+      setErrorMessage('Unable to delete a todo');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     todosForDelete.forEach((todoCurrent: Todo) =>
       handleDeleteTodo(todoCurrent),
     );
-  }, [todosForDelete, handleDeleteTodo]);
+  }, [todosForDelete]);
 
   const handleSubmitEditedTodo = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
